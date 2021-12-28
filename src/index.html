@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Hello Angular</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"> </script>
+</head>
+
+<body>
+
+    
+    
+    
+    <div class="controller_div" ng-app="myApp">
+    <div ng-include="'./assets/header.html'"></div>
+    <my-app></my-app>
+        <div ng-controller='phoneController'>
+
+            <div ng-include="'./assets/phonesList.html'"></div>
+
+            <p ng-style="somestyle">Директива ng-style</p>
+            <p ng-class="someclass">Директива ng-class</p>
+
+            <div style="display: flex; width: 100%; justify-content: space-evenly; height: 250px; overflow: hidden; margin-bottom: 10px;">
+                <div>
+                    <input type="checkbox" ng-model="data.visible">Открыть/скрыть</input><br>
+                    <img ng-show="data.visible"
+                        src="https://oir.mobi/uploads/posts/2021-06/1623579018_30-oir_mobi-p-peizazhi-kanadi-priroda-krasivo-foto-31.jpg">
+                    <img ng-hide="data.visible"
+                        src="https://s1.1zoom.me/big0/796/Canada_Mountains_Lake_Forests_Scenery_Moraine_Lake_547434_1280x784.jpg">
+
+                </div>
+
+                <div>
+                    <input type="checkbox" ng-model="secondData.visible">Открыть/скрыть</input><br>
+                    <img ng-if="secondData.visible"
+                        src="https://s0.tchkcdn.com/g-mjQmDLZ80egbO2hbG4eTOg/17/266032/660x480/f/0/3dd_25024200_140427203404295_5925803933485236224_n.jpg">
+                    <img ng-if="!secondData.visible" src="https://a.d-cd.net/bc92dcds-1920.jpg">
+                </div>
+            </div>
+            <div ng-style="style" ng-mousedown="ngstyle()">
+                ng-mousedown
+            </div>
+
+            <button ng-focus="focus()" ng-blur="blur()" style="padding: 5px 30px;transition: .5s;"
+                ng-style='styleButton'>
+                {{focusOrBlur}}
+            </button>
+
+
+
+        </div>
+        <div ng-controller='filterController'>
+            <div style=" border-bottom: 1px solid gray; ">
+                <p style="width: fit-content; margin: 0 auto; ">Фильтры и валидация</p>
+            </div>
+            <div class="filter">Lowercase & Uppercase</div>
+            <div>text : {{lowercaseText }} <br>
+                lowercase: {{lowercaseText | lowercase}} <br>
+                uppercase: {{lowercaseText | uppercase}}
+            </div>
+            <div class="filter">Number</div>
+            <div>number: 123.456 <br> filter: {{123.456 | number:1}}</div>
+            <div class="filter">Currency</div>
+            <div> {{234.5 | currency:'RUB'}} <br>
+                {{234.5 | currency}}
+            </div>
+            <div class="filter">Date</div>
+            <div>{{1288323623006 | date:'medium'}}<br>
+                {{'1288323623006' | date:'h:mma MM/dd/yyyy '}}<br>
+                {{'1288323623006' | date:"MM/dd/yyyy 'at' h:mma"}}<br>
+            </div>
+            <div class="filter">orderBy & limitTo & search</div>
+            <p>Введите модель: <input type="text" ng-model="model"></p>
+            <div>
+                <div ng-repeat="phone in phones| filter:{name:model} | orderBy:sortparam | limitTo:4 ">
+                    <span><b>{{phone.name }} </b> <i>{{phone | old}}</i><br>
+                        Цена: {{phone.price}}$<br>
+                        Год: {{phone.year}}</span>
+                </div>
+            </div>
+            <div class="filter">Validation</div>
+            <form name="myForm">
+                <fieldset>
+                    <input ng-model="form.mail" ng-pattern="/^[a-z0-9_-]+@[a-z0-9_-]+\.[a-z]{2,6}$/" required
+                        placeholder="mail" />
+                    <input required placeholder="Введите год выпуска" ng-model="form.year" ng-pattern="/\d\d\d\d/" />
+                    <input ng-model="form.date" required ng-pattern="/\d\d/\d\d/\d\d\d\d/" placeholder="Введите дату" />
+                    </p>
+                </fieldset>
+                <button type="submit" ng-click="check()" style="background-color:#e3f2fd;">Сохранить</button>
+            </form>
+            <div ng-show="invalidForm">Проверьте правильность заполненных полей</div>
+            <div style=" border-bottom: 1px solid gray; ">
+                <p style="width: fit-content; margin: 0 auto; ">Создание своих директив</p>
+            </div>
+            <div class="directive">
+                <div class="filter">Директива в div </div>
+                <div phones-list="phones"></div>
+                <div class="filter">Link, restrict, tevplateUrl</div>
+                <div secondphones-list="phones"></div>
+                <div class="filter">Через source</div>
+                <phones-list source="phones" />
+            </div>
+
+        </div>
+        <div style=" border-bottom: 1px solid gray; ">
+            <p style="width: fit-content; margin: 0 auto; ">Сервис $http и ajax-запросы</p>
+        </div>
+        <div ng-controller='HttpController'>
+            <button ng-click='load()'>Загрузить всех пользователей</button>
+            <button ng-click='load(userId)'>Загрузить пользователя с id: </button> <input ng-model="userId"
+                style="width: 50px;"> <br>
+            <div ng-show="loaded">
+                <div ng-repeat="user in users" class="user">
+                    <img src='{{user.avatar}}'>
+                    <div>
+                        <h4>{{user.first_name}} {{user.last_name}}</h4>
+                        <p>email: {{user.email}}</p>
+                    </div>
+                </div>
+                <div ng-show="showPages">
+                    <button ng-class="{activePage: activePage == '1'}" ng-click='request("?page=1")'>1</button>
+                    <button ng-class="{activePage: activePage == '2'}" ng-click='request("?page=2")'>2</button>
+                </div>
+            </div>
+            <div ng-show='resultError' style="color: red;">Пользователь с таким id не найден</div>
+            <img src="https://i.gifer.com/VAyR.gif" ng-show="wait" style="width: 50px;">
+        </div>
+    </div>
+
+
+
+
+
+    <footer id="sticky-footer" class="flex-shrink-0 py-4  text-black-50" style="background-color: #e3f2fd;">
+        <div class="container text-center">
+            <small>Copyright &copy; Your Website</small>
+        </div>
+    </footer>
+
+
+
+    <style>
+        .controller_div {
+            padding: 20px;
+        }
+
+        .activePage {
+            background-color: rgb(175, 220, 238);
+        }
+
+        .directive p {
+            margin: 3px 0
+        }
+
+        img {
+            width: 400px;
+        }
+
+        .user {
+            display: flex;
+            margin: 10px 0;
+            align-items: center;
+        }
+
+        .user img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .filter {
+            border-bottom: 1px solid gray;
+            margin: 10px 0 5px;
+            font-style: italic;
+            width: fit-content;
+        }
+
+        button {
+            border: 0;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .myclass {
+            background-color: rgb(208, 188, 255);
+        }
+    </style>
+
+    <script>
+        var myApp = angular.module('myApp', []);
+    </script>
+
+
+    <script src="./assets/phonesController.js" type="text/javascript"></script>
+    <script src="./assets/script.js"></script>
+    <script src="./assets/filterController.js"></script>
+    <script src="./assets/phonesList.js"></script>
+    <script src="./assets/httpController.js"></script>
+</body>
+
+</html>

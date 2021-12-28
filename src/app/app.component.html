@@ -1,0 +1,30 @@
+
+
+
+<div style="margin: 3vh 20px;">
+    <label>Введите имя:</label>
+    <input [(ngModel)]="name" placeholder="name">
+
+    <h1 [ngSwitch]="name">
+        <ng-template ngSwitchCase="">Имя не введено</ng-template>
+        <ng-template ngSwitchDefault>{{name}} студент гр.873902</ng-template>
+    </h1>
+
+    <p>Количество кликов {{count}}</p>
+    <button (click)="increase()">Click</button>
+    <button (click)="reset()">Reset</button>
+
+    <child-comp></child-comp>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
